@@ -25,6 +25,7 @@ public class Achievement {
 
     private String position;
 
+    @Column(name = "`year`")
     private Integer year;
 
     private Integer displayOrder;

@@ -5,8 +5,10 @@ import com.kcesports.dto.LoginResponse;
 import com.kcesports.entity.Admin;
 import com.kcesports.repository.AdminRepository;
 import com.kcesports.security.JwtService;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthService {
@@ -25,12 +27,18 @@ public class AuthService {
         Admin admin = adminRepository
                 .findByUsername(request.getUsername())
                 .orElseThrow(() ->
-                        new RuntimeException("Invalid username or password"));
+                        new ResponseStatusException(
+                                HttpStatus.UNAUTHORIZED,
+                                "Invalid username or password"
+                        ));
 
         boolean passwordMatches = passwordEncoder.matches(request.getPassword(), admin.getPassword());
 
         if(!passwordMatches) {
-            throw new RuntimeException("Invalid password");
+            throw new ResponseStatusException(
+                    HttpStatus.UNAUTHORIZED,
+                    "Invalid username or password"
+            );
         }
 
         String token = jwtService.generateToken(admin.getUsername());

@@ -21,7 +21,7 @@ public class PlayerService {
     }
 
     public List<Player> getAllPlayers() {
-        return playerRepository.findAllByOrderByDisplayOverAsc();
+        return playerRepository.findAllByOrderByDisplayOrderAsc();
     }
 
     public Player getPlayerById(Long playerId) {
@@ -52,7 +52,7 @@ public class PlayerService {
         existingPlayer.setImageUrl(updatedPlayer.getImageUrl());
         existingPlayer.setImagePublicId(updatedPlayer.getImagePublicId());
         existingPlayer.setInstagram(updatedPlayer.getInstagram());
-        existingPlayer.setDisplayOver(updatedPlayer.getDisplayOver());
+        existingPlayer.setDisplayOrder(updatedPlayer.getDisplayOrder());
 
         Player savedPlayer = playerRepository.save(existingPlayer);
 

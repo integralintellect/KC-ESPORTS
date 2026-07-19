@@ -31,7 +31,8 @@ public class Player {
 
     private String instagram;
 
-    private Integer displayOver;
+    @Column(name = "display_over")
+    private Integer displayOrder;
 
     private String imagePublicId;
 }
