@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-kc-bg: #05080f;
+  --color-kc-surface: #0b111c;
+  --color-kc-card: #101827;
+
+  --color-kc-blue: #00b8ff;
+  --color-kc-blue-dark: #0077b6;
+  --color-kc-blue-light: #38d5ff;
+
+  --color-kc-white: #f8fafc;
+  --color-kc-muted: #94a3b8;
+  --color-kc-border: #1e293b;
+
+  --font-heading: "Rajdhani", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background: #05080f;
+  color: #f8fafc;
+
+  font-family: "Inter", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+a {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+::selection {
+  background: #00b8ff;
+  color: #05080f;
+}
