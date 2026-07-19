@@ -1,13 +1,17 @@
 package com.kcesports.config;
 
 import com.kcesports.security.JwtAuthenticationFilter;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -16,8 +20,11 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtAuthenticationFilter
+    ) {
+        this.jwtAuthenticationFilter =
+                jwtAuthenticationFilter;
     }
 
     @Bean
@@ -26,37 +33,97 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http
+    ) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())
-                .cors(cors -> {})
+
+                // Disable CSRF because we use JWT
+                .csrf(csrf ->
+                        csrf.disable()
+                )
+
+                // Enable CORS
+                .cors(cors -> {
+                })
+
+                // Disable default Spring Security login page
+                .formLogin(form ->
+                        form.disable()
+                )
+
+                // Disable HTTP Basic authentication
+                .httpBasic(basic ->
+                        basic.disable()
+                )
+
+                // JWT = stateless authentication
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
-                        ))
+                        )
+                )
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**")
+
+                        // Authentication endpoints
+                        .requestMatchers(
+                                "/api/auth/**"
+                        )
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/players/**")
+
+                        // Public players
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/players/**"
+                        )
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/gallery/**")
+
+                        // Public gallery
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/gallery/**"
+                        )
                         .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/achievements/**")
+
+                        // Public achievements
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/achievements/**"
+                        )
                         .permitAll()
-                        .requestMatchers("/api/players/**")
+
+                        // Admin player management
+                        .requestMatchers(
+                                "/api/players/**"
+                        )
                         .hasRole("ADMIN")
-                        .requestMatchers("/api/gallery/**")
+
+                        // Admin gallery management
+                        .requestMatchers(
+                                "/api/gallery/**"
+                        )
                         .hasRole("ADMIN")
-                        .requestMatchers("/api/upload/**")
+
+                        // Admin achievement management
+                        .requestMatchers(
+                                "/api/achievements/**"
+                        )
                         .hasRole("ADMIN")
-                        .requestMatchers("/api/achievements/**")
+
+                        // Admin image uploads
+                        .requestMatchers(
+                                "/api/upload/**"
+                        )
                         .hasRole("ADMIN")
+
+                        // Everything else
                         .anyRequest()
                         .permitAll()
                 )
+
+                // JWT filter
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
